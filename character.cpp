@@ -97,6 +97,32 @@ void Character::setClassType(Character::ClassType classType)
     mClassType = classType;
 }
 
+void Character::addExp(qint64 exp)
+{
+    mExp += exp;
+
+    if(mExp >mLevel * mLevel *mLevel *1000)
+    {
+        ++ mLevel;
+    }
+
+}
+
+qint64 Character::getExp() const
+{
+    return  mExp;
+}
+
+void Character::changedZBList(const QList<CommonHelper::BasicEquipment> &list)
+{
+    zblsit = list;
+}
+
+QList<CommonHelper::BasicEquipment> Character::getZBList() const
+{
+    return  zblsit;
+}
+
 //! [0]
 void Character::read(const QJsonObject &json)
 {
@@ -106,8 +132,22 @@ void Character::read(const QJsonObject &json)
     if (json.contains("level") && json["level"].isDouble())
         mLevel = json["level"].toInt();
 
+    if (json.contains("Exp") && json["Exp"].isDouble())
+        mExp = json["Exp"].toInt();
+
     if (json.contains("classType") && json["classType"].isDouble())
         mClassType = ClassType(json["classType"].toInt());
+
+
+    if (json.contains("zbList") && json["zbList"].isArray()) {
+        QJsonArray zbArray = json["zbList"].toArray();
+        zblsit.clear();
+
+        for (auto && Index : zbArray) {
+            QJsonObject zbObject = Index.toObject();
+            zblsit.append(CommonHelper::readZB(zbObject));
+        }
+    }
 }
 //! [0]
 
@@ -117,6 +157,16 @@ void Character::write(QJsonObject &json) const
     json["name"] = mName;
     json["level"] = mLevel;
     json["classType"] = mClassType;
+     json["Exp"] = mExp;
+
+     QJsonArray zbArray;
+     for (const CommonHelper::BasicEquipment &zb : zblsit) {
+         QJsonObject zbObject;
+         CommonHelper::writeZB(zb,  zbObject);
+         zbArray.append(zbObject);
+     }
+     json["zbList"] = zbArray;
+
 }
 //! [1]
 

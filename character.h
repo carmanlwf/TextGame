@@ -52,13 +52,15 @@
 #define CHARACTER_H
 
 #include <QJsonObject>
+#include<QJsonArray>
 #include <QObject>
 #include <QString>
+#include "commonhelper.h"
 
 //! [0]
-class Character
+class Character: public QObject
 {
-    Q_GADGET;
+     Q_OBJECT;
 
 public:
     enum ClassType {
@@ -78,6 +80,13 @@ public:
     ClassType classType() const;
     void setClassType(ClassType classType);
 
+    void  addExp(qint64 exp);
+    qint64  getExp() const;
+
+    void  changedZBList(const QList<CommonHelper::BasicEquipment> &list );
+    QList<CommonHelper::BasicEquipment>  getZBList() const;
+
+
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
@@ -86,8 +95,9 @@ private:
     QString mName;
     int mLevel;
     ClassType mClassType;
-    qint64 mExp;
+    qint64 mExp{0};
 
+    QList<CommonHelper::BasicEquipment> zblsit;
     // 属性
 
 

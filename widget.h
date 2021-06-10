@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
-class  Game;
+
 class  CreateRole;
 class  MainWidget;
 class Widget : public QWidget
@@ -29,7 +29,6 @@ private slots:
 
 private:
     Ui::Widget *ui;
-     std::shared_ptr<Game> game_;
      std::shared_ptr<CreateRole> role;
      std::shared_ptr<MainWidget> mainWidget;
 };

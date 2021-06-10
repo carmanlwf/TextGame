@@ -1,13 +1,12 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "createrole.h"
-#include "game.h"
+#include "character.h"
 #include <QDebug>
 #include"mainwidget.h"
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
-    , game_(std::make_shared<Game>())
     , role(std::make_shared<CreateRole>())
    , mainWidget(std::make_shared<MainWidget>())
 {
@@ -24,9 +23,16 @@ Widget::~Widget()
 void Widget::recvRoleInfo(const QString &name, int roleType)
 {
     qDebug()<<"Widget::recvRoleInfo" <<name << roleType ;
-    game_->newGame();
 
-    mainWidget.get()->show();
+    Character  role;
+    role.setName(name);
+    role.setClassType(Character::ClassType(roleType));
+    role.setLevel(1);
+        // role
+    //game_->newGame(name, roleType);
+    mainWidget->setRoleInfo(&role);
+    mainWidget->show();
+
 }
 
 
@@ -43,7 +49,9 @@ void Widget::on_pushButtonNew_clicked()
 
 void Widget::on_pushButtonLoad_clicked()
 {
-
+    mainWidget->loadGame("save.json");
+     mainWidget->show();
+      hide();
 }
 
 void Widget::on_pushButtonAbout_clicked()
